@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 # Define available models
 MODEL_OPTIONS = {
-    "GPT-4": "gpt-4o",
-    "Claude 3.5": "claude-3-5-sonnet-20241022"
+    "GPT-4.1": "gpt-4.1",
+    "GPT-o4-mini": "gpt-o4-mini",
 }
 context_window = 128000
 # Get API keys from environment variables with optional default values
@@ -45,7 +45,7 @@ prompt_default = "### Instructions:\n" \
 
 def create_viewer_url_by_passage(passage):
     """Create a URL to open PDF.js viewer with annotation highlighting."""
-    base_url = "http://localhost:8000/viewer.html"
+    base_url = "https://laughing-fortnight-wp7g4gww752grqv-8000.app.github.dev/viewer.html"
 
     try:
         ann_list = json.loads(passage[0].metadata.get('annotations', '[]'))
@@ -114,9 +114,9 @@ def stream_response(selected_model, messages, passages):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
-        if selected_model == "gpt-4o":
-            print("Using OpenAI GPT-4 model")
-            messages.insert(0, {"role": "system", "content": "You are a helpful assistant."})
+        if selected_model in ["gpt-4.1", "gpt-o4-mini"]:
+            print(f"Using OpenAI {selected_model} model")
+            messages.insert(0, {"role": "system", "content": "You are a helpful assistant. You should present the answer in the structure that best explaining the subject. When not sure, follow this pattern: First answer the question straight forward, then provide the detailed reasoning leading towards the answer. You avoid being robotic, overly polite, or saccharine. Be playful and use some humor when appropriate. When mentioning technical term that I likely don’t know, add a short explaination using simple term, example or analogy, but don’t force an analogy if there isn’t a good one. For any technical questions regarding API, gcloud platform, library, language feature as such, always conduct a search and reference the latest documentation. Reply in Simplified Chinese, use the original English words for technical term."})
             for response in openai_client.chat.completions.create(
                     model=selected_model,
                     messages=messages,
@@ -175,7 +175,7 @@ def main(args):
 
     # Initialize session states
     if 'selected_model' not in st.session_state:
-        st.session_state.selected_model = "Claude 3.5"  # Default model
+        st.session_state.selected_model = list(MODEL_OPTIONS.keys())[0]  # Default model
     if "messages" not in st.session_state:
         st.session_state.messages = []
     if "passages" not in st.session_state:
