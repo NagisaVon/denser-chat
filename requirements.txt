@@ -147,3 +147,4 @@ watchdog==5.0.3 ; python_full_version >= "3.11.0" and python_full_version < "4.0
 xgboost==2.1.2 ; python_full_version >= "3.11.0" and python_full_version < "4.0.0"
 xxhash==3.5.0 ; python_full_version >= "3.11.0" and python_full_version < "4.0.0"
 yarl==1.17.1 ; python_full_version >= "3.11.0" and python_version < "4.0"
+unstructured
