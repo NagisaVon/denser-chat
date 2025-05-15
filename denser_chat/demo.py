@@ -19,7 +19,7 @@ load_dotenv()
 # Define available models
 MODEL_OPTIONS = {
     "GPT-4.1": "gpt-4.1",
-    "GPT-o4-mini": "gpt-o4-mini",
+    "GPT-o4-mini": "o4-mini",
 }
 context_window = 128000
 # Get API keys from environment variables with optional default values
@@ -114,32 +114,17 @@ def stream_response(selected_model, messages, passages):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
-        if selected_model in ["gpt-4.1", "gpt-o4-mini"]:
-            print(f"Using OpenAI {selected_model} model")
-            messages.insert(0, {"role": "system", "content": "You are a helpful assistant. You should present the answer in the structure that best explaining the subject. When not sure, follow this pattern: First answer the question straight forward, then provide the detailed reasoning leading towards the answer. You avoid being robotic, overly polite, or saccharine. Be playful and use some humor when appropriate. When mentioning technical term that I likely don’t know, add a short explaination using simple term, example or analogy, but don’t force an analogy if there isn’t a good one. For any technical questions regarding API, gcloud platform, library, language feature as such, always conduct a search and reference the latest documentation. Reply in Simplified Chinese, use the original English words for technical term."})
-            for response in openai_client.chat.completions.create(
-                    model=selected_model,
-                    messages=messages,
-                    stream=True,
-                    top_p=0,
-                    temperature=0.0
-            ):
-                full_response += response.choices[0].delta.content or ""
-                message_placeholder.markdown(full_response + "▌")
-            message_placeholder.markdown(full_response)
-        else:
-            print("Using Claude 3.5 model")
-            with claude_client.messages.stream(
-                    max_tokens=1024,
-                    messages=messages,
-                    model="claude-3-5-sonnet-20241022",
-            ) as stream:
-                for text in stream.text_stream:
-                    full_response += text
-                    message_placeholder.markdown(full_response + "▌", unsafe_allow_html=True)
-
-            message_placeholder.markdown(full_response, unsafe_allow_html=True)
-
+        print(f"Using OpenAI {selected_model} model")
+        messages.insert(0, {"role": "system", "content": "You are a helpful assistant. You should present the answer in the structure that best explaining the subject. When not sure, follow this pattern: First answer the question straight forward, then provide the detailed reasoning leading towards the answer. You avoid being robotic, overly polite, or saccharine. Be playful and use some humor when appropriate. When mentioning technical term that I likely don’t know, add a short explaination using simple term, example or analogy, but don’t force an analogy if there isn’t a good one. For any technical questions regarding API, gcloud platform, library, language feature as such, always conduct a search and reference the latest documentation. Reply in Simplified Chinese, use the original English words for technical term."})
+        for response in openai_client.chat.completions.create(
+                model=selected_model,
+                messages=messages,
+                stream=True,
+        ):
+            full_response += response.choices[0].delta.content or ""
+            message_placeholder.markdown(full_response + "▌")
+        message_placeholder.markdown(full_response)
+        
     # Update session state
     print(f"### messages\n: {messages}\n")
     print(f"### full_response\n: {full_response}\n")

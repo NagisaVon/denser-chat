@@ -79,6 +79,11 @@ cd denser_chat
 streamlit run demo.py -- --index_name test_index 
 ```
 
+for papers
+```bash
+streamlit run demo.py -- --index_name paper_index
+```
+
 Then we can start to ask questions such as "What is in-batch negative sampling ?" or "what parts have stop pins?". We can expect that the chatbot will return the answer with the source highlighted in the PDF.
 
 ### License
