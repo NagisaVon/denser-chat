@@ -1,1 +1,1 @@
-../paper/attention_is_all_you_need.pdf
+https://arxiv.org/html/1706.03762v7

@@ -45,8 +45,8 @@ prompt_default = "### Instructions:\n" \
 
 def create_viewer_url_by_passage(passage):
     """Create a URL to open PDF.js viewer with annotation highlighting."""
-    base_url = "https://laughing-fortnight-wp7g4gww752grqv-8000.app.github.dev/viewer.html"
 
+    base_url = "http://localhost:8000/viewer.html"
     try:
         ann_list = json.loads(passage[0].metadata.get('annotations', '[]'))
         pdf_url = passage[0].metadata.get('source', None)
